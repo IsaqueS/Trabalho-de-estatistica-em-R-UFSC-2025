@@ -115,7 +115,7 @@ ggplot(dataset_faixas, aes(x = Year_Group, y = BMI, group = 1)) +
   geom_col(fill = "steelblue") +
   geom_line(color = "red", linewidth = 1.2) +
   labs(
-    title = "Média de BMI por Faixa de Ano com Linha de Tendência (sem regressão)",
+    title = "Média de BMI por Faixa de Ano",
     x = "Faixa de Ano",
     y = "Média de BMI"
   ) +
