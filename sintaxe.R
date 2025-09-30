@@ -24,23 +24,6 @@ dados |>
 
 
 # ========================================
-# vitorias por time
-# ========================================
-dados |>
-  group_by(Team) |>
-  summarise(vitorias = n(), .groups = "drop") |>
-  ggplot(aes(x = reorder(Team, vitorias), y = vitorias, fill = Team)) +
-  geom_col() +
-  coord_flip() +
-  labs(
-    title = "Vitórias por time",
-    x = "Time",
-    y = "Número de vitórias"
-  ) +
-  theme_minimal() +
-  theme(legend.position = "none")
-
-# ========================================
 # Criando dataset com faixas de 30 em 30 anos
 # ========================================
 
@@ -177,7 +160,7 @@ ggplot(contagem, aes(x = Year_Group, y = n, fill = rider_type_.PPS.)) +
 # Relação idade do ciclista e faixa de ano
 # ========================================
 
-ggplot(dados, aes(x = factor(Year_Group), y = age)) +
+ggplot(dados, aes(x = factor(rider_type_.PPS.), y = age)) +
   geom_boxplot(fill = "lightblue", color = "darkblue") +
   stat_summary(fun = median, geom = "point", shape = 23, size = 3, fill = "red") +
   labs(
@@ -213,4 +196,48 @@ ggplot(top_countries, aes(x = Year_Group, y = n, fill = Country)) +
 # ========================================
 
 ggplot(dataset_faixas, aes(x=Year_Group, y= `Tour_overall_length_(km)`)) +
-  geom_col(position = "dodge", fill = "blue")
+  geom_col(position = "dodge", fill = "steelblue") + 
+  labs (
+    title = "Quilometragem por ano",
+    x = "Faixa de Ano",
+    y = "Quilometragem"
+  )
+
+
+library(dplyr)
+library(ggplot2)
+library(janitor)
+
+# ========================================
+# Tabelas de frequência 
+# ========================================
+
+# 1) Países vencedores
+freq_paises <- dados %>%
+  tabyl(Country) %>%
+  arrange(desc(n)) %>%
+  mutate(freq_relativa = round(percent, 2))
+
+print(freq_paises)
+
+
+
+# 2) Tipos de ciclista
+freq_tipos <- dados %>%
+  tabyl(rider_type_.PPS.) %>%
+  arrange(desc(n)) %>%
+  mutate(freq_relativa = round(percent, 2))
+
+print(freq_tipos)
+
+
+# 3) Idades dos vencedores
+freq_idades <- dados %>%
+  group_by(age) %>%
+  summarise(vitorias = n()) %>%
+  mutate(freq_relativa = round(vitorias / sum(vitorias) * 100, 2)) %>%
+  arrange(age)
+
+print(freq_idades)
+
+
